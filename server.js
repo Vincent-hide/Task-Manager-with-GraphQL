@@ -7,7 +7,7 @@ const resolvers = require('./resolvers');
 const typeDefs = require('./typeDefs');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3002;
 
 app.use(cors());
 app.use(express.json());
