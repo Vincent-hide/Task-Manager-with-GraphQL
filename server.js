@@ -1,11 +1,10 @@
 const express = require('express');
-const {ApolloServer, gql} = require('apollo-server-express');
+const { ApolloServer } = require('apollo-server-express');
 const cors = require('cors');
-
-
 require('dotenv').config();
 
 const resolvers = require('./resolvers');
+const typeDefs = require('./typeDefs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -13,39 +12,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-const typeDefs = gql`
-    type Query {
-        greetings: [String!]
-        tasks: [Task!]
-        task(id: ID!) : Task
-        users: [User!]
-        user(id: ID!): User
-    }
 
-    type User {
-        id: ID!
-        name: String!
-        email: String!
-        tasks: [Task!]
-    }
-
-    type Task {
-        id: ID!
-        name: String!
-        completed: Boolean!
-        user: User!
-    }
-
-    input createTaskInput {
-        name: String!
-        completed: Boolean!
-        userId: ID!
-    }
-
-    type Mutation {
-        createTask(input: createTaskInput): Task
-    }
-`
 
 const apolloServer = new ApolloServer({
   typeDefs,
