@@ -1,18 +1,21 @@
 const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
 const cors = require('cors');
+
 require('dotenv').config();
 
 const resolvers = require('./resolvers');
 const typeDefs = require('./typeDefs');
+
+const { connection } = require('./databse/util');
+
+connection();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
-
-
 
 const apolloServer = new ApolloServer({
   typeDefs,

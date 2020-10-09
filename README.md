@@ -2,6 +2,12 @@
 
 [localhost:3002/graphql](http://localhost:3002/graphql)
 
+## Environmental Variables
+create a file called .env and provide a following code
+    
+    PORT=3002
+    MONGO_DB_URL=mongodb://localhost/taskdb
+
 ## Task 
     query GetAllTask {
       tasks {
