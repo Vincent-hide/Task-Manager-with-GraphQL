@@ -1,8 +1,10 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { combineResolvers } = require('graphql-resolvers');
 
 const {tasks, users} = require('../constants');
-const User = require('../databse/models/user')
+const User = require('../databse/models/user');
+const { isAuthenticated } = require('./middleware');
 
 module.exports = {
   Mutation: {
@@ -59,7 +61,10 @@ module.exports = {
   },
   Query: {
     users: () => users,
-    user: (_, {id}) => users.find(user => user.id === id),
+    user: combineResolvers(isAuthenticated, (_, { id }, { email }) => {
+      console.log("===", email);
+      return users.find(user => user.id === id)
+    }),
   },
   User: {
     tasks: ({id}) => tasks.filter(task => task.userId === id)

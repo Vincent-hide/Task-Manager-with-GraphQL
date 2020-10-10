@@ -8,6 +8,7 @@ const resolvers = require('./resolvers');
 const typeDefs = require('./typeDefs');
 
 const { connection } = require('./databse/util');
+const { verifyUser } = require('./helper/context');
 
 connection();
 
@@ -19,7 +20,13 @@ app.use(express.json());
 
 const apolloServer = new ApolloServer({
   typeDefs,
-  resolvers
+  resolvers,
+  context: async ({ req }) => {
+    await verifyUser(req);
+    return {
+      email: req.email
+    }
+  }
 });
 
 apolloServer.applyMiddleware({app, path: '/graphql'});
