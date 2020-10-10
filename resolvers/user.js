@@ -1,13 +1,10 @@
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const {tasks, users} = require('../constants');
 const User = require('../databse/models/user')
 
 module.exports = {
-  Query: {
-    users: () => users,
-    user: (_, {id}) => users.find(user => user.id === id),
-  },
   Mutation: {
     signup: async (_, { input }) => {
       try {
@@ -36,7 +33,33 @@ module.exports = {
         console.log(err);
         throw err;
       }
+    },
+    login: async (_, args) => {
+      try {
+        const user = await User.findOne({ email: args.input.email });
+        if(!user) {
+          throw new Error('User not found');
+        }
+        const isPasswordValid = await bcrypt.compare(args.input.password, user.password);
+        if(!isPasswordValid) {
+          throw new Error('Incorrect password');
+        }
+
+        // JWT
+        const secret = process.env.JWT_SECRET_KEY || 'mysecretkey';
+        const token = jwt.sign({ email: user.email }, secret, { expiresIn: '1d' });
+        return { token: token }
+
+      }catch (err) {
+        console.error(err);
+        throw err;
+      }
+
     }
+  },
+  Query: {
+    users: () => users,
+    user: (_, {id}) => users.find(user => user.id === id),
   },
   User: {
     tasks: ({id}) => tasks.filter(task => task.userId === id)
