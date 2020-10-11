@@ -20,7 +20,10 @@ module.exports = {
     }
   },
   Task: {
-    user: (parent) => users.find(user => user.id === parent.userId)
+    user: (parent) => {
+      console.log("TEST")
+      return users.find(user => user.id === parent.userId)
+    }
     // or user: ({ userId }) => users.find(user => user.id === userId)
   },
 };

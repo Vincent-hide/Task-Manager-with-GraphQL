@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { combineResolvers } = require('graphql-resolvers');
 
-const {tasks, users} = require('../constants');
+const Task = require('../databse/models/task');
 const User = require('../databse/models/user');
 const { isAuthenticated } = require('./middleware');
 
@@ -60,13 +60,29 @@ module.exports = {
     }
   },
   Query: {
-    users: () => users,
-    user: combineResolvers(isAuthenticated, (_, { id }, { email }) => {
-      console.log("===", email);
-      return users.find(user => user.id === id)
+    user: combineResolvers(isAuthenticated, async (_, __, { email }) => {
+      const user = await User.findOne({ email: email });
+      try {
+        const user = await User.findOne({ email: email });
+        if(!user) {
+          throw new Error('User not found!');
+        }
+        return user;
+      } catch (err) {
+        console.error(err);
+        throw new Error("User not found");
+      }
     }),
   },
   User: {
-    tasks: ({id}) => tasks.filter(task => task.userId === id)
+    tasks: async ({id}) => {
+      try {
+        const tasks = await Task.find({ user: id });
+        return tasks;
+      } catch (err){
+        console.log(err);
+        throw err;
+      }
+    }
   }
 };
