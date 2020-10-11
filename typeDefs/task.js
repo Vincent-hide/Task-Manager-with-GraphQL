@@ -10,13 +10,14 @@ module.exports = gql`
         id: ID!
         name: String!
         completed: Boolean!
-        user: User!
+        user: User
+        createdAt: Date!
+        updatedAt: Date!
     }
 
     input createTaskInput {
         name: String!
         completed: Boolean!
-        userId: ID!
     }
 
     extend type Mutation {
