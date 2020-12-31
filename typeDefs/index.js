@@ -1,4 +1,4 @@
-const {gql} = require('apollo-server-express');
+const { gql } = require('apollo-server-express');
 
 const userTypeDefs = require('./user');
 const taskTypeDefs = require('./task');

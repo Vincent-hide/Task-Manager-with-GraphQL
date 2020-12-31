@@ -7,13 +7,13 @@ require('dotenv').config();
 const resolvers = require('./resolvers');
 const typeDefs = require('./typeDefs');
 
-const { connection } = require('./databse/util');
+const { connection } = require('./database/util');
 const { verifyUser } = require('./helper/context');
 
 connection();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 2000;
 
 app.use(cors());
 app.use(express.json());
@@ -24,7 +24,8 @@ const apolloServer = new ApolloServer({
   context: async ({ req }) => {
     await verifyUser(req);
     return {
-      email: req.email
+      email: req.email,
+      userId: req.userId
     }
   }
 });
@@ -37,5 +38,5 @@ app.get("/", (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Server listening on PORT: localhost:${PORT}`);
-  console.log(`Graphql Endpoint: localhost:${PORT}${apolloServer.graphqlPath}`);
+  console.log(`🚀 Graphql Endpoint: localhost:${PORT}${apolloServer.graphqlPath}`);
 });
