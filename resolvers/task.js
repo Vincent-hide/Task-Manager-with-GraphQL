@@ -58,7 +58,7 @@ module.exports = {
         // console.log("parent", parent)
         const user = await User.findById(parent.user);
         return user;
-      } catch(err) {
+      } catch (err) {
         console.log(err);
         throw err;
       }

@@ -1,14 +1,14 @@
-const express = require('express');
-const { ApolloServer } = require('apollo-server-express');
-const cors = require('cors');
+const express = require("express");
+const { ApolloServer } = require("apollo-server-express");
+const cors = require("cors");
 
-require('dotenv').config();
+require("dotenv").config();
 
-const resolvers = require('./resolvers');
-const typeDefs = require('./typeDefs');
+const resolvers = require("./resolvers");
+const typeDefs = require("./typeDefs");
 
-const { connection } = require('./database/util');
-const { verifyUser } = require('./helper/context');
+const { connection } = require("./database/util");
+const { verifyUser } = require("./helper/context");
 
 connection();
 
@@ -25,18 +25,20 @@ const apolloServer = new ApolloServer({
     await verifyUser(req);
     return {
       email: req.email,
-      userId: req.userId
-    }
-  }
+      userId: req.userId,
+    };
+  },
 });
 
-apolloServer.applyMiddleware({app, path: '/graphql'});
+apolloServer.applyMiddleware({ app, path: "/graphql" });
 
 app.get("/", (req, res) => {
-  res.send("GraphQL Task Manager")
-})
+  res.send("GraphQL Task Manager");
+});
 
 app.listen(PORT, () => {
   console.log(`Server listening on PORT: localhost:${PORT}`);
-  console.log(`🚀 Graphql Endpoint: localhost:${PORT}${apolloServer.graphqlPath}`);
+  console.log(
+    `🚀 Graphql Endpoint: localhost:${PORT}${apolloServer.graphqlPath}`
+  );
 });
