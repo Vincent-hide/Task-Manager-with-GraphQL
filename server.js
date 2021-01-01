@@ -37,6 +37,12 @@ const apolloServer = new ApolloServer({
     }
     return contextObj;
   },
+  formatError: err => {
+    console.log(err);
+    return {
+      message: `hey man, you got an error due to the following reason: "${err.message}"`,
+    };
+  }
 });
 
 apolloServer.applyMiddleware({ app, path: "/graphql" });
