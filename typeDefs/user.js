@@ -33,4 +33,8 @@ module.exports = gql`
   type Token {
     token: String!
   }
+
+  extend type Subscription {
+    userCreated: User
+  }
 `;

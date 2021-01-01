@@ -6,6 +6,9 @@ const Task = require("../database/models/task");
 const User = require("../database/models/user");
 const { isAuthenticated } = require("./middleware");
 
+const PubSub = require("../subscription");
+const { userEvents } = require("../subscription/events");
+
 module.exports = {
   Mutation: {
     signup: async (_, { input }) => {
@@ -28,6 +31,10 @@ module.exports = {
         const result = newUser.save();
         // console.log(result._id, typeof result._id); // 'object'
         // console.log(result.id, typeof result.id);   // 'string'
+
+        PubSub.publish(userEvents.USER_CREATED, {
+          userCreated: result,
+        });
 
         return result;
       } catch (err) {
@@ -75,6 +82,11 @@ module.exports = {
         throw new Error("User not found");
       }
     }),
+  },
+  Subscription: {
+    userCreated: {
+      subscribe: () => PubSub.asyncIterator(userEvents.USER_CREATED),
+    },
   },
   User: {
     tasks: async ({ id }) => {

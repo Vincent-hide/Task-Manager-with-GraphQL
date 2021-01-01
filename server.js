@@ -25,15 +25,17 @@ app.use(express.json());
 const apolloServer = new ApolloServer({
   typeDefs,
   resolvers,
-  context: async ({ req }) => {
-    await verifyUser(req);
-    return {
-      email: req.email,
-      userId: req.userId,
-      loaders: {
-        user: new DataLoader(keys => loaders.user.batchUsers(keys))
-      }
-    };
+  context: async ({ req, connection }) => {
+    const contextObj = {};
+    if(req) {
+      await verifyUser(req);
+      contextObj.email = req.email;
+      contextObj.userId = req.userid;
+    }
+    contextObj.loaders = {
+      user: new DataLoader(keys => loaders.user.batchUsers(keys))
+    }
+    return contextObj;
   },
 });
 
@@ -43,9 +45,11 @@ app.get("/", (req, res) => {
   res.send("GraphQL Task Manager");
 });
 
-app.listen(PORT, () => {
+const httpServer = app.listen(PORT, () => {
   console.log(`Server listening on PORT: localhost:${PORT}`);
   console.log(
     `🚀 Graphql Endpoint: localhost:${PORT}${apolloServer.graphqlPath}`
   );
 });
+
+apolloServer.installSubscriptionHandlers(httpServer);
