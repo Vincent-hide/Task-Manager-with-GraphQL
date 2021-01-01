@@ -10,13 +10,13 @@ module.exports.verifyUser = async (req) => {
 
     if (bearerHeader) {
       const token = bearerHeader.split(" ")[1];
-      console.log("token===", token);
+      // console.log("token===", token);
       const payload = jwt.verify(
         token,
         process.env.JWT_SECRET_KEY || "mysecretkey"
       );
       req.email = payload.email;
-      console.log("payload:", payload);
+      // console.log("payload:", payload);
       const user = await User.findOne({ email: payload.email });
       req.userId = user.id;
     }

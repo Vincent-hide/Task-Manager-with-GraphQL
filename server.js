@@ -10,6 +10,10 @@ const typeDefs = require("./typeDefs");
 const { connection } = require("./database/util");
 const { verifyUser } = require("./helper/context");
 
+const loaders = require("./loaders");
+const DataLoader = require("dataloader");
+
+// for db
 connection();
 
 const app = express();
@@ -26,6 +30,9 @@ const apolloServer = new ApolloServer({
     return {
       email: req.email,
       userId: req.userId,
+      loaders: {
+        user: new DataLoader(keys => loaders.user.batchUsers(keys))
+      }
     };
   },
 });

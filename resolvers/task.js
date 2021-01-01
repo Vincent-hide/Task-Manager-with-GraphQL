@@ -108,11 +108,14 @@ module.exports = {
     ),
   },
 
+  // Field Level Resovler
+  // gets called get the task/s query tries to fetch a user infomation along with task. if also task infomation is about to be fetched, it does not get executed
   Task: {
-    user: async (parent) => {
+    user: async (parent, _, { loaders }) => {
       try {
-        // console.log("parent", parent)
-        const user = await User.findById(parent.user);
+        console.log("Field Level Resolvers");
+        console.log("parent", parent);
+        const user = await loaders.user.load(parent.user.toString());
         return user;
       } catch (err) {
         console.log(err);
