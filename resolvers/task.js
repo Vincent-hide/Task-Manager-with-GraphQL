@@ -2,6 +2,7 @@ const { combineResolvers } = require("graphql-resolvers");
 
 const Task = require("../database/models/task");
 const User = require("../database/models/user");
+const { stringToBase64, base64ToString } = require("../helper/helper");
 const { isAuthenticated, isTaskOwner } = require("./middleware");
 
 module.exports = {
@@ -13,7 +14,7 @@ module.exports = {
           const query = { user: userId };
           if (cursor) {
             query["_id"] = {
-              $lt: cursor,
+              $lt: base64ToString(cursor),
             };
           }
           let tasks = await Task.find(query)
@@ -22,14 +23,16 @@ module.exports = {
 
           // as tasks trys fetch one more document than limit passed, if tasks is bigger than limit, there is still a documents after fetch as same number of documents as limit
           const hasNextPage = tasks.length > limit;
-          
+
           tasks = hasNextPage ? tasks.slice(0, -1) : tasks;
 
           return {
             taskFeed: tasks,
             pageInfo: {
-              nextPageCursor: hasNextPage ? tasks[tasks.length-1].id : null,
-              hasNextPage: hasNextPage
+              nextPageCursor: hasNextPage
+                ? stringToBase64(tasks[tasks.length - 1].id)
+                : null,
+              hasNextPage: hasNextPage,
             },
           };
         } catch (err) {
