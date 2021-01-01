@@ -8,15 +8,21 @@ const { translateAliases } = require("../database/models/task");
 
 module.exports = {
   Query: {
-    tasks: combineResolvers(isAuthenticated, async (_, __, { userId }) => {
-      try {
-        const tasks = await Task.find({ user: userId });
-        return tasks;
-      } catch (err) {
-        console.log(err);
-        throw err;
+    tasks: combineResolvers(
+      isAuthenticated,
+      async (_, { skip = 0, limit = 10 }, { userId }) => {
+        try {
+          const tasks = await Task.find({ user: userId })
+            .sort({ _id: -1 })
+            .skip(skip)
+            .limit(limit);
+          return tasks;
+        } catch (err) {
+          console.log(err);
+          throw err;
+        }
       }
-    }),
+    ),
     task: combineResolvers(
       isAuthenticated,
       isTaskOwner,
