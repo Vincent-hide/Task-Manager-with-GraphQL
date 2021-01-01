@@ -3,19 +3,21 @@
 [localhost:3002/graphql](http://localhost:3002/graphql)
 
 ## Environmental Variables
+
 create a file called .env and provide a following code
-    
+
     PORT=3002
     MONGO_DB_URL=mongodb://localhost/taskdb
 
-## Task 
+## Task
+
     query GetAllTask {
       tasks {
         id
         name
       }
     }
-    
+
     query GetTaskById{
       task(id: "1") {
         id
@@ -23,7 +25,7 @@ create a file called .env and provide a following code
         completed
       }
     }
-    
+
     mutation CreateTask {
       createTask(input:{
         name: "New Task"
@@ -34,8 +36,10 @@ create a file called .env and provide a following code
         name
         completed
       }
-    }    
+    }
+
 ## User
+
     query getAllUsers {
       users {
         id
@@ -47,7 +51,7 @@ create a file called .env and provide a following code
         }
       }
     }
-    
+
     query getUserById {
       user {
         id
@@ -63,7 +67,7 @@ create a file called .env and provide a following code
     {
       "Authorization": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImdyZWdAZ21haWwuY29tIiwiaWF0IjoxNjAyMzkwNjk1LCJleHAiOjE2MDI0NzcwOTV9.GmCVoWPtc21xyRB5n80h0YGISzuc6iXs9Q9topv6YLg"
     }
-    
+
     mutation loginUser {
       login(input: { email: "greg@gmail.com", password: "123456" }) {
         token

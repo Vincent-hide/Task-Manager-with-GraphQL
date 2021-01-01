@@ -27,22 +27,22 @@ const apolloServer = new ApolloServer({
   resolvers,
   context: async ({ req, connection }) => {
     const contextObj = {};
-    if(req) {
+    if (req) {
       await verifyUser(req);
       contextObj.email = req.email;
       contextObj.userId = req.userid;
     }
     contextObj.loaders = {
-      user: new DataLoader(keys => loaders.user.batchUsers(keys))
-    }
+      user: new DataLoader((keys) => loaders.user.batchUsers(keys)),
+    };
     return contextObj;
   },
-  formatError: err => {
+  formatError: (err) => {
     console.log(err);
     return {
-      message: `hey man, you got an error due to the following reason: "${err.message}"`,
+      message: `hey man, you got an error due to the following reason: "${err.message}" `,
     };
-  }
+  },
 });
 
 apolloServer.applyMiddleware({ app, path: "/graphql" });
