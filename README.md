@@ -73,3 +73,37 @@ create a file called .env and provide a following code
         token
       }
     }
+
+
+## Authentication
+
+    mutation {
+      register(userInfo: {
+        username: "John Doe",
+        password: "Password",
+        age: 123
+      }) {
+        errors {
+          field
+          message
+        }
+        user {
+          id
+          username
+          initial
+        }
+      }
+      login(userInfo: {
+        username: "John Doe",
+        password: "Password",
+        age: 123
+      })
+    }
+
+    subscription {
+      newUser {
+        id
+        username
+        initial
+      }
+    }
